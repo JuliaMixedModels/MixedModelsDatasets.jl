@@ -10,13 +10,9 @@ function dataset(nm::AbstractString)
     get!(cacheddatasets, nm) do
         path = joinpath(_testdata(), nm * ".arrow")
         if !isfile(path)
-            throw(
-                ArgumentError(
-                    "Dataset \"$nm\" is not available.\nUse MixedModels.datasets() for available names.",
-                ),
-            )
+            throw(ArgumentError("Dataset \"$nm\" is not available.\nUse MixedModels.datasets() for available names."))
         end
-        Arrow.Table(path)
+        return Arrow.Table(path)
     end
 end
 dataset(nm::Symbol) = dataset(string(nm))
@@ -27,7 +23,6 @@ dataset(nm::Symbol) = dataset(string(nm))
 Return a vector of names of the available test data sets
 """
 function datasets()
-    return first.(
-        Base.Filesystem.splitext.(filter(endswith(".arrow"), readdir(_testdata())))
-    )
+    return first.(Base.Filesystem.splitext.(filter(endswith(".arrow"),
+                                                   readdir(_testdata()))))
 end
