@@ -1,0 +1,20 @@
+name = "MixedModelsDatasets"
+uuid = "7e9fb7ac-9f67-43bf-b2c8-96ba0796cbb6"
+authors = ["Phillip Alday <me@phillipalday.com>", "Douglas Bates <dmbates@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Arrow = "69666777-d1a9-59fb-9406-91d4454c9d45"
+Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
+LazyArtifacts = "4af54fe1-eca0-43a8-85a7-787d91b784e3"
+
+[compat]
+Aqua = "0.5, 0.6, 0.7"
+Arrow = "1, 2"
+
+[extras]
+Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Aqua", "Test"]
