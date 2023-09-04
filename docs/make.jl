@@ -1,9 +1,8 @@
 using Documenter
-using DocStringExtensions
 using MixedModelsDatasets
 
 makedocs(; root=joinpath(dirname(pathof(MixedModelsDatasets)), "..", "docs"),
-         sitename="BoxCox",
+         sitename="MixedModelsDatasets",
          doctest=true,
          strict=true,
          pages=["index.md"])
