@@ -8,4 +8,5 @@ makedocs(; root=joinpath(dirname(pathof(MixedModelsDatasets)), "..", "docs"),
          strict=true,
          pages=["index.md"])
 
-deploydocs(; repo="github.com/JuliaMixedModels/MixedModelsDatasets.jl", push_preview=true, devbranch="main")
+deploydocs(; repo="github.com/JuliaMixedModels/MixedModelsDatasets.jl", push_preview=true,
+           devbranch="main")
