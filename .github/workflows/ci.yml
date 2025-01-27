@@ -23,6 +23,11 @@ jobs:
       matrix:
         version: [min, 1, nightly]
         os: [ubuntu-latest, macos-latest]
+        exclude:
+          - os: macos-latest
+            version: min
+          - os: macos-latest
+            version: nightly
     steps:
       - name: Checkout
         uses: actions/checkout@v4
