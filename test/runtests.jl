@@ -12,6 +12,8 @@ end
 
     @testset "$(ds) loadable" for ds in datasets()
         @test dataset(ds) isa Arrow.Table
-        @test dataset(titlecase(ds)) isa Arrow.Table
+        @test dataset(Symbol(titlecase(ds))) isa Arrow.Table
     end
+
+    @test_throws ArgumentError dataset("This is not a Dataset")
 end
