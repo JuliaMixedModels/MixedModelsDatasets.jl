@@ -14,5 +14,6 @@ end
 
     @testset "$(ds) loadable" for ds in datasets()
         @test dataset(ds) isa Arrow.Table
+        @test dataset(titlecase(ds)) isa Arrow.Table
     end
 end
