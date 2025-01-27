@@ -4,9 +4,7 @@ using MixedModelsDatasets
 using Test
 
 @testset "Aqua" begin
-    @static if VERSION >= v"1.9"
-        Aqua.test_all(MixedModelsDatasets; ambiguities=false, piracy=true)
-    end
+    Aqua.test_all(MixedModelsDatasets)
 end
 
 @testset "datasets" begin
@@ -14,5 +12,8 @@ end
 
     @testset "$(ds) loadable" for ds in datasets()
         @test dataset(ds) isa Arrow.Table
+        @test dataset(Symbol(titlecase(ds))) isa Arrow.Table
     end
+
+    @test_throws ArgumentError dataset("This is not a Dataset")
 end

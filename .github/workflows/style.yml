@@ -12,7 +12,7 @@ on:
       - '.gitignore'
 jobs:
   format-check:
-    name: Style Enforcement (Julia ${{ matrix.julia-version }} - ${{ github.event_name }})
+    name: Style Enforcement (Julia ${{ matrix.version }} - ${{ github.event_name }})
     # Run on push's or non-draft PRs
     if: (github.event_name == 'push') || (github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
@@ -20,16 +20,21 @@ jobs:
     permissions: write-all
     strategy:
       matrix:
-        julia-version: [1.6]
+        version: [1]
     steps:
-      - uses: julia-actions/setup-julia@latest
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Julia Setup
+        uses: julia-actions/setup-julia@v2
         with:
-          version: ${{ matrix.julia-version }}
-      - uses: actions/checkout@v4
+            version: ${{ matrix.version }}
+      - uses: julia-actions/cache@v2
+        with:
+            cache-compiled: "true"
       - name: Instantiate `format` environment and format
         run: |
-          julia -e'
-          using Pkg; Pkg.activate()
+          julia --project=@format -e'
+          using Pkg;
           Pkg.add("JuliaFormatter")
           using JuliaFormatter
           format(".", YASStyle())'
