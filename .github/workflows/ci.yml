@@ -21,17 +21,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        version: [1.6, 1, nightly]
-        arch: [x64]
-        os: [ubuntu-latest]
+        version: [min, 1, nightly]
+        os: [ubuntu-latest, macos-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Julia Setup
         uses: julia-actions/setup-julia@v2
-        with:
-          version: ${{ matrix.version }}
-          arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v2
         with:
             cache-compiled: "true"
@@ -43,11 +39,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Coverage Process
         uses: julia-actions/julia-processcoverage@v1
-        if:  ${{ startsWith(matrix.os, 'ubuntu') && (matrix.version == '1') }}
       - name: Coverage Upload
         uses: codecov/codecov-action@v5
-        if:  ${{ startsWith(matrix.os, 'ubuntu') && (matrix.version == '1') }}
         with:
-          file: lcov.info
+          files: lcov.info
         env:
             CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
