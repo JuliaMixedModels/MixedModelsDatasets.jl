@@ -4,9 +4,7 @@ using MixedModelsDatasets
 using Test
 
 @testset "Aqua" begin
-    @static if VERSION >= v"1.9"
-        Aqua.test_all(MixedModelsDatasets; ambiguities=false, piracy=true)
-    end
+    Aqua.test_all(MixedModelsDatasets)
 end
 
 @testset "datasets" begin
