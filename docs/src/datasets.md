@@ -12,6 +12,15 @@ Blood samples were collected quarterly to determine CBPP status. The dataset con
 observations with variables for herd identity, incidence count, period, and herd size. It is
 a canonical example for fitting binomial GLMMs with a grouped random effect.
 
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `herd` | String | Herd identity | 15 levels (H01–H15) |
+| `period` | String | Sampling period (quarterly) | 4 levels (1–4) |
+| `incid` | Int8 | Number of new CBPP cases | min 0, mean 1.77, max 12 |
+| `hsz` | Int8 | Herd size at start of period | min 2, mean 15.04, max 34 |
+
 **APA citation:**
 
 Lesnoff, M., Laval, G., Bonnet, P., Abdicho, S., Workalemahu, A., Kifle, D., Peyraud, A.,
@@ -32,6 +41,16 @@ Bangladesh from the 1988 Bangladesh Fertility Survey. Variables include district
 (60 districts), whether the woman lives in an urban or rural area, her age (centred), number
 of living children, and a binary contraception use indicator. A standard example for
 binomial GLMMs with a random intercept for district.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `dist` | String | District of residence | 60 levels |
+| `urban` | String | Urban or rural area | N, Y |
+| `livch` | String | Number of living children | 0, 1, 2, 3+ |
+| `age` | Float64 | Age (centred) | min −13.56, mean 0.00, max 19.44 |
+| `use` | String | Contraception use | N, Y |
 
 **APA citation:**
 
@@ -59,6 +78,16 @@ the fitting of linear mixed models with three-way crossed vector random effects 
 `y ~ 1 + u + (1 + u | g) + (1 + u | h) + (1 + u | i)`. The generic variable names
 indicate it was generated for computational rather than substantive purposes.
 
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `g` | String | Grouping factor g | 4726 levels |
+| `h` | String | Grouping factor h | 172 levels |
+| `i` | String | Grouping factor i | 34 levels |
+| `u` | Int8 | Integer covariate | min 0, mean 13.66, max 29 |
+| `y` | Int8 | Response | min −50, mean 4.94, max 50 |
+
 **APA citation:**
 
 No published citation. 
@@ -73,6 +102,13 @@ No published citation.
 five preparations made from each of six batches of the intermediate product H-acid. This
 classic one-way balanced random-effects dataset (30 observations) was the primary motivating
 example in the lme4 and MixedModels.jl documentation for simple scalar random effects.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `batch` | String | Batch identity | A, B, C, D, E, F |
+| `yield` | Int16 | Yield (grams of standard color) | min 1440, mean 1527.5, max 1635 |
 
 **APA citation:**
 
@@ -92,6 +128,13 @@ within-batch mean square, illustrating a boundary case for variance component es
 The data were constructed because such cases, while occurring in practice, were rarely
 published at the time.
 
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `batch` | String | Batch identity | A, B, C, D, E, F |
+| `yield` | Float64 | Yield (constructed) | min −0.89, mean 5.67, max 13.43 |
+
 **APA citation:**
 
 Box, G. E. P., & Tiao, G. C. (1973). *Bayesian inference in statistical analysis*
@@ -108,6 +151,17 @@ Box, G. E. P., & Tiao, G. C. (1973). *Bayesian inference in statistical analysis
 contains 403 observations (individual chick-level) nested within 118 broods within 63
 geographic locations, with altitude (height above sea level) and year as covariates.
 A worked example for overdispersed count (Poisson GLMM) analysis with nested grouping.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `index` | String | Chick identity | 403 levels |
+| `brood` | String | Brood identity | 118 levels |
+| `location` | String | Geographic location | 63 levels |
+| `height` | Int16 | Altitude (m above sea level) | min 403, mean 462, max 533 |
+| `year` | String | Survey year | 1995, 1996, 1997 |
+| `ticks` | Int8 | Tick count on chick | min 0, mean 6.37, max 85 |
 
 **APA citation:**
 
@@ -129,6 +183,18 @@ was a service course for another department (service), department (dept), and nu
 rating (y, scale 1–5). The stated goal of the underlying survey was to identify the
 "best liked professor." A medium-large example of a partially nested (students partially
 crossed with instructors) mixed-effects model.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `s` | String | Student identity | 2972 levels |
+| `d` | String | Instructor identity | 1128 levels |
+| `dept` | String | Department | 14 levels |
+| `studage` | String | Student seniority (semesters) | 2, 4, 6, 8 |
+| `lectage` | String | Lecture recency (semesters ago) | 1, 2, 3, 4, 5, 6 |
+| `service` | String | Service course for another dept | N, Y |
+| `y` | Int8 | Rating | min 1, mean 3.21, max 5 |
 
 **APA citation:**
 
@@ -155,6 +221,18 @@ no). The dataset contains 1,789 observations of truncated reaction times (rt_tru
 reaction times (rt_raw), and is a canonical example for maximal and parsimonious
 mixed-effects modelling in psycholinguistics.
 
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `subj` | String | Subject identity | 56 levels |
+| `item` | String | Item identity | 32 levels |
+| `spkr` | String | Speaker | new, old |
+| `prec` | String | Precedent condition | break, maintain |
+| `load` | String | Cognitive load | no, yes |
+| `rt_trunc` | Int16 | Truncated reaction time (ms) | min 579, mean 2182, max 5171 |
+| `rt_raw` | Int16 | Raw reaction time (ms) | min 579, mean 2226, max 15923 |
+
 **APA citation:**
 
 Kronmüller, E., & Barr, D. J. (2007). Perspective-free pragmatics: Broken precedents and
@@ -179,6 +257,14 @@ machine three times, yielding 54 observations in a balanced crossed design. A cl
 from the split-plot/repeated-measures literature, analysed with a random intercept for
 worker and a random worker-by-machine interaction.
 
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `Worker` | String | Worker identity | 1, 2, 3, 4, 5, 6 |
+| `Machine` | String | Machine brand | A, B, C |
+| `score` | Float32 | Productivity score | min 43.0, mean 59.65, max 72.1 |
+
 **APA citation:**
 
 Milliken, G. A., & Johnson, D. E. (1992). *Analysis of messy data: Vol. I. Designed
@@ -201,6 +287,14 @@ University of Minnesota. Included in MixedModels.jl as a large-scale benchmark f
 two-way crossed random effects models (users crossed with movies), illustrating the
 computational advantages of the blocked Cholesky approach.
 
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `g` | String | User identity | 6040 levels |
+| `h` | String | Movie identity | 3706 levels |
+| `y` | Int8 | Rating (1–5 stars) | min 1, mean 3.58, max 5 |
+
 **APA citation:**
 
 Harper, F. M., & Konstan, J. A. (2016). The MovieLens datasets: History and context.
@@ -219,6 +313,17 @@ within 9 European nations (Belgium, West Germany, Denmark, France, Ireland, Ital
 Luxembourg, Netherlands, United Kingdom). A standard example for Poisson GLMMs with
 region-level random intercepts and a national-level offset, first distributed with the
 MLwiN multilevel modelling software.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `nation` | String | Nation | 9 levels |
+| `region` | String | Region (within nation) | 78 levels |
+| `county` | String | County (within region) | 354 levels |
+| `deaths` | Int16 | Observed melanoma deaths | min 0, mean 27.83, max 313 |
+| `expected` | Float64 | Expected deaths (age/sex adjusted) | min 0.69, mean 27.80, max 258.86 |
+| `uvb` | Float64 | UV radiation index (centered) | min −8.90, mean 0.00, max 13.36 |
 
 **APA citation:**
 
@@ -242,6 +347,20 @@ on the previous trial; lT) and lagged quality (lQ) as additional covariates. Cor
 responses to word targets in the 300–3,000 ms range yielded 16,409 analyzable observations.
 A standard RePsychLing benchmark for high-dimensional crossed random-effects models.
 
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `subj` | String | Subject identity | 73 levels |
+| `item` | String | Item identity | 240 levels |
+| `trial` | Int16 | Trial number within subject | min 2, mean 240, max 480 |
+| `F` | String | Target frequency | HF, LF |
+| `P` | String | Prime relatedness | rel, unr |
+| `Q` | String | Display quality | clr, deg |
+| `lQ` | String | Lagged display quality | clr, deg |
+| `lT` | String | Lagged target type | NW, WD |
+| `rt` | Int16 | Response time (ms) | min 301, mean 647, max 2994 |
+
 **APA citation:**
 
 Masson, M. E. J., Rabe, M. M., & Kliegl, R. (2017). Modulation of additive and interactive
@@ -261,6 +380,16 @@ semiconductor industry intended to estimate variance components and identify ass
 causes of observed variability. A four-level nested design (sites within wafers within lots
 within sources).
 
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `Source` | String | Furnace source | 1, 2 |
+| `Lot` | String | Lot identity (within source) | 8 levels |
+| `Wafer` | String | Wafer identity (within lot) | 1, 2, 3 |
+| `Site` | String | Measurement site (within wafer) | 1, 2, 3 |
+| `Thickness` | Float64 | Oxide layer thickness | min 1980, mean 2000, max 2036 |
+
 **APA citation:**
 
 Littell, R. C., Milliken, G. A., Stroup, W. W., & Wolfinger, R. D. (1996). *SAS system for
@@ -278,6 +407,14 @@ mixed models* (p. 155). SAS Institute.
 **Description:** Strength measurements of a chemical paste product from 60 cask samples:
 three casks are drawn from each of 10 batches, with two strength measurements per cask,
 yielding a nested random-effects structure (cask nested within batch).
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `batch` | String | Batch identity | 10 levels (A–J) |
+| `cask` | String | Cask identity (within batch) | a, b, c |
+| `strength` | Float64 | Paste strength | min 54.2, mean 60.05, max 66.0 |
 
 **APA citation:**
 
@@ -297,6 +434,14 @@ two-way crossed design with no interaction term). A classic example for fitting
 models with crossed random effects, originating from an investigation into the variability
 between penicillin samples.
 
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `plate` | String | Plate identity | 24 levels |
+| `sample` | String | Penicillin sample | A, B, C, D, E, F |
+| `diameter` | Int8 | Zone of inhibition diameter (mm) | min 18, mean 22.97, max 27 |
+
 **APA citation:**
 
 Davies, O. L., & Goldsmith, P. L. (Eds.). (1972). *Statistical methods in research and
@@ -314,6 +459,14 @@ night) of a multi-condition sleep dose-response study. The dataset covers 10 day
 (days 0–1: adaptation/training; day 2: baseline; days 3–9: sleep restriction), giving
 180 observations (18 subjects × 10 days). A ubiquitous example for fitting linear
 mixed models with random slopes for time.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `subj` | String | Subject identity | 18 levels |
+| `days` | Int8 | Day of study | min 0, mean 4.5, max 9 |
+| `reaction` | Float64 | Average reaction time (ms) | min 194.33, mean 298.51, max 466.35 |
 
 !!! note "Prior erroneous description"
     The lme4 help page contains a slight inaccuracy: sleep restriction began after day 2 (the baseline), not day 0 (see Belenky et al., 2003, p. 2, and [lme4 GitHub issue #615](https://github.com/lme4/lme4/issues/615)).
@@ -341,6 +494,20 @@ situational types (self-to-blame vs. other-to-blame). Variables include trait an
 response (resp: no/perhaps/yes), and a binary dichotomization thereof (r2: N/Y). Originally
 collected by Vansteelandt (2000) and used throughout De Boeck & Wilson (2004) to illustrate
 explanatory item response models.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `subj` | String | Subject identity | 316 levels |
+| `item` | String | Item identity | 24 levels |
+| `anger` | Int8 | Trait anger score (STAXI) | min 11, mean 20.0, max 39 |
+| `gender` | String | Gender | F, M |
+| `btype` | String | Behavior type | curse, scold, shout |
+| `situ` | String | Situation type | other, self |
+| `mode` | String | Response mode | do, want |
+| `resp` | String | Polytomous response | no, perhaps, yes |
+| `r2` | String | Binary response | N, Y |
 
 **APA citation:**
 
