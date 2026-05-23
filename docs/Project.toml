@@ -1,5 +1,9 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+MixedModelsDatasets = "7e9fb7ac-9f67-43bf-b2c8-96ba0796cbb6"
 
 [compat]
-Documenter = "0.27"
+Documenter = "1"
+
+[sources.MixedModelsDatasets]
+path = ".."
