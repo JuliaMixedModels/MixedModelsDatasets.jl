@@ -8,7 +8,7 @@ using Test
 end
 
 @testset "datasets" begin
-    @test length(datasets()) == 17
+    @test length(datasets()) == 26
 
     @testset "$(ds) loadable" for ds in datasets()
         @test dataset(ds) isa Arrow.Table
