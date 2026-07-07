@@ -78,11 +78,12 @@ checksum no longer matches. Set `info=false` to suppress the `@info` log
 messages.
 """
 function _download(nm::AbstractString; info=true)
+    nm = lowercase(nm)
     return get!(CACHED_DATASETS, nm) do
         nm in keys(DATASETS) ||
             throw(ArgumentError("Dataset \"$nm\" is not available.\nUse MixedModels.datasets() for available names."))
         
-        path = joinpath(CACHE[], lowercase(nm) * ".arrow")
+        path = joinpath(CACHE[], nm * ".arrow")
         ds = DATASETS[nm]
         if !isfile(path) || ds.sha2 != bytes2hex(open(sha2_256, path))
             info && @info "Downloading dataset..."
