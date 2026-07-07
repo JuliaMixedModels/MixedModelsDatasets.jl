@@ -1,5 +1,28 @@
 # Datasets
 
+## box
+
+**Full name:** Box (1950) Rat Growth Under Thyroid Treatment
+
+**Description:** Body weight (g) of 27 rats measured at five time points (0–4 weeks) under one of three treatments: Control, Thioracil, or Thyroxin.
+Each rat belongs to exactly one treatment group, with unequal group sizes (10 Control, 10 Thioracil, 7 Thyroxin) but a balanced set of measurement times, yielding 135 observations.
+A classic worked example for growth-curve models with a treatment-by-time interaction and a per-subject random slope in time.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `Subj` | String | Rat identity | 27 levels |
+| `Group` | String | Treatment | Control, Thioracil, Thyroxin |
+| `time` | Int8 | Time in trial (weeks) | min 0, mean 2.0, max 4 |
+| `resp` | Int16 | Body weight (g) | min 46, mean 100.81, max 189 |
+
+**APA citation:**
+
+Box, G. E. P. (1950). Problems in the analysis of growth and wear curves. *Biometrics*, *6*(4), 362–389. https://doi.org/10.2307/3001781
+
+---
+
 ## cbpp
 
 **Full name:** Contagious Bovine Pleuropneumonia
@@ -121,6 +144,151 @@ Box, G. E. P., & Tiao, G. C. (1973). *Bayesian inference in statistical analysis
 
 ---
 
+## elp_ldt_item
+
+**Full name:** English Lexicon Project — Lexical Decision Item Covariates
+
+**Description:** Item-level covariates for the 80,962 letter strings (half words, half matched nonwords) used in the English Lexicon Project's lexical decision task, joined to trial-level data (`ELP_ldt_trial`) on `item`.
+Words and nonwords are organized in matched pairs (`pairno`), sorted alphabetically within pair by the word member.
+Covariates include word length and measures of orthographic neighborhood/bigram frequency used to model lexical decision performance.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `item` | String | Letter string (word or nonword) | 80962 levels |
+| `itemno` | Int32 | Item index | min 1, mean 40481.5, max 80962 |
+| `pairno` | Int32 | Word/nonword pair index | min 1, mean 20241.0, max 40481 |
+| `isword` | Bool | Whether the item is a real word | false, true |
+| `wrdlen` | Int8 | Word length (characters) | min 1, mean 8.0, max 21 |
+| `Ortho_N` | Int8 | Orthographic neighborhood size (Coltheart's N) | min 0, mean 1.53, max 25 |
+| `BG_Sum` | Union{Missing, Int32} | Summed bigram frequency (177 missing) | min 11, mean 13938.41, max 59803 |
+| `BG_Mean` | Union{Missing, Float32} | Mean bigram frequency (177 missing) | min 5.5, mean 1921.26, max 6910.0 |
+| `BG_Freq_By_Pos` | Union{Missing, Int16} | Positional bigram frequency (4 missing) | min 0, mean 2043.08, max 6985 |
+
+**APA citation:**
+
+Balota, D. A., Yap, M. J., Hutchison, K. A., Cortese, M. J., Kessler, B., Loftis, B., Neely, J. H., Nelson, D. L., Simpson, G. B., & Treiman, R. (2007). The English Lexicon Project. *Behavior Research Methods*, *39*(3), 445–459. https://doi.org/10.3758/bf03193014
+
+!!! note "Related tables"
+    Joins to trial-level responses in `ELP_ldt_trial` (on `item`) and subject-level covariates in `elp_ldt_subj` (on `subj`).
+
+---
+
+## elp_ldt_subj
+
+**Full name:** English Lexicon Project — Lexical Decision Subject Covariates
+
+**Description:** Subject-level covariates for the 814 participants who completed the lexical decision task in the English Lexicon Project, joined to trial-level data (`elp_ldt_trial`) on `subj`.
+Includes demographic and testing-session information (university site, sex, date of birth, session start times), a chronotype measure (Morningness–Eveningness Questionnaire, MEQ), vision/hearing self-ratings, and vocabulary/reading measures collected as part of the larger battery.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `subj` | String | Subject identity | 814 levels |
+| `univ` | String | Testing site (university) | 6 levels |
+| `sex` | Union{Missing, String} | Sex (8 missing) | f, m |
+| `frstLang` | Union{Missing, String} | First language (8 missing) | English, other |
+| `DOB` | Date | Date of birth | 1938-06-07 to 1984-11-14 |
+| `educatn` | Int8 | Years of education | min 1, mean 8.9, max 28 |
+| `MEQ` | Union{Missing, Float32} | Morningness–Eveningness score (8 missing) | min 19.0, mean 44.49, max 75.0 |
+| `vision` | Union{Missing, Int8} | Self-rated vision, 0–7 scale (1 missing) | min 0, mean 5.51, max 7 |
+| `hearing` | Union{Missing, Int8} | Self-rated hearing, 0–7 scale (1 missing) | min 0, mean 5.86, max 7 |
+| `preshlth` | Union{Missing, Int8} | Self-rated present health (1 missing) | min 0, mean 5.49, max 7 |
+| `pasthlth` | Union{Missing, Int8} | Self-rated past health (1 missing) | min 0, mean 4.93, max 7 |
+| `ncorrct` | Union{Missing, Int8} | Vocabulary test items correct (18 missing) | min 5, mean 29.85, max 40 |
+| `rawscor` | Union{Missing, Int8} | Vocabulary test raw score (18 missing) | min 13, mean 31.99, max 40 |
+| `vocabAge` | Union{Missing, Float32} | Vocabulary age-equivalent score (19 missing) | min 10.3, mean 17.81, max 21.0 |
+| `shipTime` | Union{Missing, Int8} | Shipley vocabulary test time, minutes (1 missing) | min 0, mean 3.09, max 9 |
+| `readTime` | Union{Missing, Float32} | Reading time measure, minutes (1 missing) | min 0.0, mean 2.5, max 15.0 |
+| `S1start` | DateTime | Session 1 start time | 2001-03-16 to 2003-07-29 |
+| `S2start` | DateTime | Session 2 start time | 2001-03-19 to 2003-07-30 |
+| `MEQstrt` | Union{Missing, DateTime} | MEQ administration start time (7 missing) | 2001-03-22 to 2003-07-30 |
+| `filename` | String | Source raw-data filename | 814 levels |
+
+**APA citation:**
+
+Balota, D. A., Yap, M. J., Hutchison, K. A., Cortese, M. J., Kessler, B., Loftis, B., Neely, J. H., Nelson, D. L., Simpson, G. B., & Treiman, R. (2007). The English Lexicon Project. *Behavior Research Methods*, *39*(3), 445–459. https://doi.org/10.3758/bf03193014
+
+!!! note "Related tables"
+    Joins to trial-level responses in `elp_ldt_trial` (on `subj`) and item-level covariates in `elp_ldt_item` (on `item`).
+
+---
+
+## elp_ldt_trial
+
+**Full name:** English Lexicon Project — Lexical Decision Trial Data
+
+**Description:** Trial-level data from the lexical decision task (LDT) of the English Lexicon Project, in which 814 subjects each judged whether a displayed letter string was a word or a nonword across two testing sessions (2,000 trials per subject on day one).
+Contains 2,745,952 trials with accuracy and raw response time; response times include some implausible values (negative and multi-second latencies), so analyses typically restrict to a plausible range (e.g. 200–3,000 ms) before further modelling.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `subj` | String | Subject identity | 814 levels |
+| `item` | String | Letter string presented | 80962 levels |
+| `seq` | Int16 | Trial sequence number within subject | min 1, mean 1687.21, max 3374 |
+| `acc` | Union{Missing, Bool} | Response accuracy (1370 missing) | false, true |
+| `rt` | Int16 | Response time (ms) | min −16160, mean 846.32, max 32061 |
+
+**APA citation:**
+
+Balota, D. A., Yap, M. J., Hutchison, K. A., Cortese, M. J., Kessler, B., Loftis, B., Neely, J. H., Nelson, D. L., Simpson, G. B., & Treiman, R. (2007). The English Lexicon Project. *Behavior Research Methods*, *39*(3), 445–459. https://doi.org/10.3758/bf03193014
+
+!!! note "Related tables"
+    Joins to item-level covariates in `ELP_ldt_item` (on `item`) and subject-level covariates in `ELP_ldt_subj` (on `subj`).
+
+---
+
+## elstongrizzle
+
+**Full name:** Elston & Grizzle (1962) Ramus Bone Growth
+
+**Description:** Length (mm) of the ramus of the mandible ("ramus bone") in 20 boys, measured at four ages: 8, 8.5, 9, and 9.5 years, for 80 observations in a fully balanced longitudinal design.
+An introductory example for random-intercept-and-slope models of individual growth trajectories, with substantial variation in curve shape across subjects (some roughly linear, some concave up, some concave down).
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `Subj` | String | Boy identity | 20 levels |
+| `time` | Float64 | Age (years) | min 8.0, mean 8.75, max 9.5 |
+| `resp` | Float64 | Ramus bone length (mm) | min 45.0, mean 50.09, max 55.5 |
+
+**APA citation:**
+
+Elston, R. C., & Grizzle, J. E. (1962). Estimation of time-response curves and their confidence bands. *Biometrics*, *18*(2), 148–159. https://doi.org/10.2307/2527453
+
+---
+
+## fggk21
+
+**Full name:** Fühner et al. (2021) Physical Fitness of Third-Graders (Emotikon Study)
+
+**Description:** Physical-fitness component scores for 108,295 third-graders (all aged 8.0–9.0 years) from 515 primary schools across 9 yearly cohorts (2011–2019), yielding 525,126 scores.
+Each child was scored on up to five fitness components (`Test`): a 6-minute endurance run (`Run`, meters), a star-shaped coordination run (`Star_r`, m/s), a 20-meter sprint (`S20_r`, m/s), a standing long jump (`SLJ`, cm), and a 1-kg medicine ball push (`BPT`, meters).
+The size and nested structure (children within schools within cohorts) make it a realistic large-scale example for contrast coding of a multi-level factor and for principled model complexification.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `Child` | String | Child identity | 108295 levels |
+| `School` | String | School identity | 515 levels |
+| `Cohort` | String | Testing cohort (year) | 2011–2019 |
+| `Sex` | String | Sex | female, male |
+| `age` | Float64 | Age at testing (years) | min 7.99, mean 8.56, max 9.11 |
+| `Test` | String | Fitness component | BPT, Run, S20_r, SLJ, Star_r |
+| `score` | Float64 | Test score (units vary by `Test`) | min 1.14, mean 226.14, max 1530.0 |
+
+**APA citation:**
+
+Fühner, T., Granacher, U., Golle, K., & Kliegl, R. (2021). Age and sex effects in physical fitness components of 108,295 third graders including 515 primary schools and 9 cohorts. *Scientific Reports*, *11*, Article 17566. https://doi.org/10.1038/s41598-021-97000-4
+
+---
+
 ## grouseticks
 
 **Full name:** Red Grouse Tick Infestation
@@ -207,6 +375,62 @@ Kronmüller, E., & Barr, D. J. (2007). Perspective-free pragmatics: Broken prece
 
 ---
 
+## kkl15
+
+**Full name:** Kliegl, Kushela & Laubrock (2015) Visual-Attention Replication
+
+**Description:** Reaction times from a larger conceptual replication and extension of `kwdyz11`, run at the University of Potsdam, examining effects of visual cueing under four cue-target relations (CTR).
+Two rectangles were displayed in cardinal (horizontal/vertical) or diagonal orientation relative to a central fixation point, with a small or large visual target appearing at one of the four rectangle ends; the target was cued validly on 70% of trials and invalidly (at each of the three other locations) on 10% of trials each.
+Adding diagonal orientations and a target-size manipulation to the original design, the study estimates the spatial–attraction correlation whose absence produced a singular fit in `kwdyz11`; it is analyzed on the raw response-time scale to preserve compatibility with that earlier study.
+86 subjects contributed 53,765 trials.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `Subj` | String | Subject identity | 86 levels |
+| `CTR` | String | Cue-target relation | dod, dos, sod, val |
+| `cardinal` | String | Rectangle orientation | cardinal, diagonal |
+| `size` | String | Target size | big, small |
+| `rt` | Float32 | Reaction time (ms) | min 150.22, mean 293.15, max 749.48 |
+
+**APA citation:**
+
+Kliegl, R., Kushela, J., & Laubrock, J. (2015). *Object orientation and target size modulate the speed of visual attention* [Technical report]. Department of Psychology, University of Potsdam.
+
+!!! note "See also"
+    A conceptual replication and extension of `kwdyz11` (Kliegl, Wei, Dambacher, Yan, & Zhou, 2011), designed to estimate the spatial–attraction correlation that produced a singular fit in the original study.
+
+---
+
+## kwdyz11
+
+**Full name:** Kliegl, Wei, Dambacher, Yan & Zhou (2011) Visual-Attention Experiment
+
+**Description:** Reaction times from a cueing experiment examining spatial, object-based, and attractor-like effects of visual attention under four cue-target relations (CTR).
+Two rectangles were displayed above and below (or, in a second orientation, to the left and right of) a central fixation point; subjects reacted to a small visual target appearing at one of the four rectangle ends, cued validly on 70% of trials and invalidly (at each of the three other locations) on 10% of trials each.
+61 subjects contributed 28,710 trials.
+The attraction effect proved close to zero as a fixed effect but showed a reliable variance component, and the originally reported model was singular — motivating the replication and extension in `kkl15`.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `Subj` | String | Subject identity | 61 levels |
+| `Item` | String | Item identity | 480 levels |
+| `CTR` | String | Cue-target relation | dod, dos, sod, val |
+| `dir` | String | Rectangle orientation | hor, ver |
+| `rt` | Float32 | Reaction time (ms) | min 150.1, mean 370.43, max 705.7 |
+
+**APA citation:**
+
+Kliegl, R., Wei, P., Dambacher, M., Yan, M., & Zhou, X. (2011). Experimental effects and individual differences in linear mixed models: Estimating the relationship between spatial, object, and attraction effects of visual attention. *Frontiers in Psychology*, *1*, Article 238. https://doi.org/10.3389/fpsyg.2010.00238
+
+!!! note "See also"
+    Replicated and extended, with additional target-size and rectangle-orientation manipulations, in `kkl15` (Kliegl, Kushela, & Laubrock, 2015).
+
+---
+
 ## machines
 
 **Full name:** Machine Productivity Scores
@@ -251,6 +475,57 @@ Included in MixedModels.jl as a large-scale benchmark for two-way crossed random
 **APA citation:**
 
 Harper, F. M., & Konstan, J. A. (2016). The MovieLens datasets: History and context. *ACM Transactions on Interactive Intelligent Systems*, *5*(4), Article 19. https://doi.org/10.1145/2827872
+
+---
+
+## ml32_movies
+
+**Full name:** MovieLens 32M Movie Metadata
+
+**Description:** Titles and genre tags for the 87,585 movies included in the MovieLens 32M dataset, joined to `ml32_ratings` on `movieId`.
+Each movie's title includes its release year, and `genres` is a pipe-separated list drawn from 20 possible genre tags (including "(no genres listed)").
+Collected and distributed by the GroupLens Research Group at the University of Minnesota.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `movieId` | Int64 | Movie identity | min 1, mean 157651.37, max 292757 |
+| `title` | String | Movie title (with release year) | 87382 levels |
+| `genres` | String | Pipe-separated genre tags | 20 distinct tags |
+
+**APA citation:**
+
+Harper, F. M., & Konstan, J. A. (2016). The MovieLens datasets: History and context. *ACM Transactions on Interactive Intelligent Systems*, *5*(4), Article 19. https://doi.org/10.1145/2827872
+
+!!! note "See also"
+    Joins to per-rating data in `ml32_ratings` (on `movieId`). See also the smaller `ml1m` (MovieLens 1M) dataset above.
+
+---
+
+## ml32_ratings
+
+**Full name:** MovieLens 32M Ratings
+
+**Description:** 32,000,204 ratings (0.5–5.0 stars, half-star increments) from 200,948 users across 84,432 movies in the MovieLens 32M dataset, collected between January 1995 and October 2023.
+Joins to `ml32_movies` on `movieId` for title and genre metadata.
+A much larger successor to `ml1m`, useful as a benchmark for two-way crossed random-effects models (users crossed with movies) at substantially greater scale.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `userId` | Int64 | User identity | 200948 levels |
+| `movieId` | Int64 | Movie identity | 84432 levels |
+| `rating` | Float64 | Rating (0.5–5.0 stars, half-star increments) | min 0.5, mean 3.54, max 5.0 |
+| `timestamp` | Int64 | Rating time (Unix epoch seconds) | 1995-01-09 to 2023-10-13 |
+
+**APA citation:**
+
+Harper, F. M., & Konstan, J. A. (2016). The MovieLens datasets: History and context. *ACM Transactions on Interactive Intelligent Systems*, *5*(4), Article 19. https://doi.org/10.1145/2827872
+
+!!! note "See also"
+    Joins to movie metadata in `ml32_movies` (on `movieId`). See also the smaller `ml1m` (MovieLens 1M) dataset above.
 
 ---
 
@@ -305,6 +580,34 @@ A standard RePsychLing benchmark for high-dimensional crossed random-effects mod
 **APA citation:**
 
 Masson, M. E. J., Rabe, M. M., & Kliegl, R. (2017). Modulation of additive and interactive effects in lexical decision by trial history. *Memory & Cognition*, *45*(3), 480–492. https://doi.org/10.3758/s13421-016-0666-z
+
+---
+
+## oxboys
+
+**Full name:** Heights of Boys in Oxford
+
+**Package origin:** nlme
+
+**Description:** Height (cm) of 26 boys from Oxford, England, measured on 9 occasions, with age standardized (via a fitted growth curve) to run from −1 to 1 across the study period.
+234 observations in a fully balanced design (9 occasions per boy).
+A classic example, popularized by Pinheiro & Bates (2000), for fitting random-intercept-and-slope growth-curve models.
+
+**Columns:**
+
+| Name | Type | Description | Summary |
+|:-----|:-----|:------------|:--------|
+| `Subj` | String | Boy identity | 26 levels |
+| `occasion` | Int8 | Measurement occasion | 1–9 |
+| `age` | Float64 | Standardized age | min −1.0, mean 0.02, max 1.0055 |
+| `height` | Float64 | Height (cm) | min 126.2, mean 149.52, max 174.8 |
+
+**APA citation:**
+
+Pinheiro, J. C., & Bates, D. M. (2000). *Mixed-effects models in S and S-PLUS*. Springer. https://doi.org/10.1007/b98882
+
+!!! note "Original data source"
+    The growth measurements were originally collected by Tuddenham, R. D., & Snyder, M. M. (1954). Physical growth of California boys and girls from birth to eighteen years. *University of California Publications in Child Development*, *1*, 183–364.
 
 ---
 
