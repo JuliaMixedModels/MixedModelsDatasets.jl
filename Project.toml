@@ -1,20 +1,26 @@
 name = "MixedModelsDatasets"
 uuid = "7e9fb7ac-9f67-43bf-b2c8-96ba0796cbb6"
 authors = ["Phillip Alday <me@phillipalday.com>", "Douglas Bates <dmbates@gmail.com>"]
-version = "0.1.2"
+version = "0.2.0"
 
 [deps]
 Arrow = "69666777-d1a9-59fb-9406-91d4454c9d45"
-Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
-LazyArtifacts = "4af54fe1-eca0-43a8-85a7-787d91b784e3"
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
+ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
+SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+Scratch = "6c6a2e73-6563-6170-7368-637461726353"
 
 [compat]
 Aqua = "0.8"
 Arrow = "1, 2"
-Artifacts = "1"
-LazyArtifacts = "1"
-Test = "0.0, 1"
-julia = "1.6"
+DelimitedFiles = "1"
+Downloads = "1"
+ProgressMeter = "1"
+SHA = "0.7"
+Scratch = "1"
+Test = "1"
+julia = "1.10"
 
 [extras]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"

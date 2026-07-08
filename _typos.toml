@@ -23,6 +23,7 @@ verbagg = "verbagg"
 grouseticks = "grouseticks"
 dyestuff = "dyestuff"
 covariate = "covariate"
+frstLang = "frstLang"
 
 [default.extend-words]
 Lik = "Lik"
