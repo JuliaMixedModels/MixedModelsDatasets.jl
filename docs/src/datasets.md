@@ -194,7 +194,7 @@ Box, G. E. P., & Tiao, G. C. (1973). *Bayesian inference in statistical analysis
 
 ---
 
-## elp_ldt_item
+## elp\_ldt\_item
 
 **Full name:** English Lexicon Project — Lexical Decision Item Covariates
 
@@ -230,7 +230,7 @@ Balota, D. A., Yap, M. J., Hutchison, K. A., Cortese, M. J., Kessler, B., Loftis
 
 ---
 
-## elp_ldt_subj
+## elp\_ldt\_subj
 
 **Full name:** English Lexicon Project — Lexical Decision Subject Covariates
 
@@ -276,7 +276,7 @@ Balota, D. A., Yap, M. J., Hutchison, K. A., Cortese, M. J., Kessler, B., Loftis
 
 ---
 
-## elp_ldt_trial
+## elp\_ldt\_trial
 
 **Full name:** English Lexicon Project — Lexical Decision Trial Data
 
@@ -657,7 +657,7 @@ Harper, F. M., & Konstan, J. A. (2016). The MovieLens datasets: History and cont
 
 ---
 
-## ml32_movies
+## ml32\_movies
 
 **Full name:** MovieLens 32M Movie Metadata
 
@@ -687,7 +687,7 @@ Harper, F. M., & Konstan, J. A. (2016). The MovieLens datasets: History and cont
 
 ---
 
-## ml32_ratings
+## ml32\_ratings
 
 **Full name:** MovieLens 32M Ratings
 
@@ -753,7 +753,7 @@ Langford, I. H., Bentham, G., & McDonald, A.-L. (1998). Multilevel modelling of 
 
 ---
 
-## mrk17_exp1
+## mrk17\_exp1
 
 **Full name:** Masson, Rabe & Kliegl (2017) Semantic Priming Experiment 1
 

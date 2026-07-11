@@ -55,7 +55,9 @@ function _parse_descriptions!(dict, path)
         m = match(r"^##[ \t]+(\S.*?)[ \t]*$", line)
         if m !== nothing
             _flush!(lines, dict, name)
-            name = lowercase(m.captures[1])
+            # headings escape special markdown characters (e.g. `elp\_ldt\_item`);
+            # strip the backslashes to recover the actual dataset name
+            name = lowercase(replace(m.captures[1], r"\\(.)" => s"\1"))
             lines = String[line]
         elseif !isempty(name)
             push!(lines, line)
