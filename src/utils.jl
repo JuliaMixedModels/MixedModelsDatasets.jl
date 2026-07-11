@@ -54,7 +54,7 @@ function _parse_descriptions!(dict, path)
     flush! = function ()
         if !isempty(name)
             while !isempty(lines) &&
-                (isempty(strip(last(lines))) || strip(last(lines)) == "---")
+                  (isempty(strip(last(lines))) || strip(last(lines)) == "---")
                 pop!(lines)
             end
             dict[name] = join(lines, '\n')
