@@ -51,28 +51,37 @@ function _parse_descriptions!(dict, path)
     isfile(path) || return dict
     name = ""
     lines = String[]
-    flush! = function ()
-        if !isempty(name)
-            while !isempty(lines) &&
-                (isempty(strip(last(lines))) || strip(last(lines)) == "---")
-                pop!(lines)
-            end
-            dict[name] = join(lines, '\n')
-        end
-        return nothing
-    end
     for line in eachline(path)
         m = match(r"^##[ \t]+(\S.*?)[ \t]*$", line)
         if m !== nothing
-            flush!()
+            _flush!(lines, dict, name)
             name = lowercase(m.captures[1])
             lines = String[line]
         elseif !isempty(name)
             push!(lines, line)
         end
     end
-    flush!()
+    _flush!(lines, dict, name)
     return dict
+end
+
+"""
+    _flush!(lines, dict, name)
+
+Store the accumulated section `lines` in `dict` under `name`, joined into a
+single string. Trailing blank lines and horizontal-rule separators (`---`) are
+dropped first. A no-op when `name` is empty (i.e. before the first section
+heading has been seen).
+"""
+function _flush!(lines::Vector{String}, dict::Dict{String,String}, name::String)
+    if !isempty(name)
+        while !isempty(lines) &&
+            (isempty(strip(last(lines))) || strip(last(lines)) == "---")
+            pop!(lines)
+        end
+        dict[name] = join(lines, '\n')
+    end
+    return nothing
 end
 
 # function hex(row)
