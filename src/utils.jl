@@ -76,7 +76,7 @@ heading has been seen).
 function _flush!(lines::Vector{String}, dict::Dict{String,String}, name::String)
     if !isempty(name)
         while !isempty(lines) &&
-            (isempty(strip(last(lines))) || strip(last(lines)) == "---")
+              (isempty(strip(last(lines))) || strip(last(lines)) == "---")
             pop!(lines)
         end
         dict[name] = join(lines, '\n')
