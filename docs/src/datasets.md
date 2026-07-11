@@ -17,6 +17,15 @@ A classic worked example for growth-curve models with a treatment-by-time intera
 | `time` | Int8 | Time in trial (weeks) | min 0, mean 2.0, max 4 |
 | `resp` | Int16 | Body weight (g) | min 46, mean 100.81, max 189 |
 
+**Example models:**
+
+```julia
+# treatment-by-time interaction with a per-subject random slope in time
+fit(MixedModel, @formula(resp ~ 1 + time * Group + (1 + time | Subj)), dataset(:box))
+# quadratic growth, with treatment acting on the curvature
+fit(MixedModel, @formula(resp ~ 1 + time + abs2(time) & Group + (1 + time | Subj)), dataset(:box))
+```
+
 **APA citation:**
 
 Box, G. E. P. (1950). Problems in the analysis of growth and wear curves. *Biometrics*, *6*(4), 362–389. https://doi.org/10.2307/3001781
@@ -43,6 +52,15 @@ It is a canonical example for fitting binomial GLMMs with a grouped random effec
 | `incid` | Int8 | Number of new CBPP cases | min 0, mean 1.77, max 12 |
 | `hsz` | Int8 | Herd size at start of period | min 2, mean 15.04, max 34 |
 
+**Example model:**
+
+```julia
+# binomial GLMM: proportion seropositive, weighted by herd size
+cbpp = dataset(:cbpp)
+fit(MixedModel, @formula((incid / hsz) ~ 1 + period + (1 | herd)),
+    cbpp, Binomial(); wts=float(cbpp.hsz))
+```
+
 **APA citation:**
 
 Lesnoff, M., Laval, G., Bonnet, P., Abdicho, S., Workalemahu, A., Kifle, D., Peyraud, A., Lancelot, R., & Thiaucourt, F. (2004). Within-herd spread of contagious bovine pleuropneumonia in Ethiopian highlands. *Preventive Veterinary Medicine*, *64*(1–2), 27–40. https://doi.org/10.1016/j.prevetmed.2004.04.002
@@ -68,6 +86,17 @@ A standard example for binomial GLMMs with a random intercept for district.
 | `livch` | String | Number of living children | 0, 1, 2, 3+ |
 | `age` | Float64 | Age (centred) | min −13.56, mean 0.00, max 19.44 |
 | `use` | String | Contraception use | N, Y |
+
+**Example models:**
+
+```julia
+# Bernoulli GLMM with a random intercept for district
+fit(MixedModel, @formula(use ~ 1 + age + abs2(age) + urban + livch + (1 | dist)),
+    dataset(:contra), Bernoulli())
+# random intercept nested in urban-by-district, Helmert-coded urban
+fit(MixedModel, @formula(use ~ 1 + age + abs2(age) + urban + livch + (1 | urban & dist)),
+    dataset(:contra), Bernoulli(); contrasts=Dict(:urban => HelmertCoding()))
+```
 
 **APA citation:**
 
@@ -98,6 +127,13 @@ The generic variable names indicate it was generated for computational rather th
 | `u` | Int8 | Integer covariate | min 0, mean 13.66, max 29 |
 | `y` | Int8 | Response | min −50, mean 4.94, max 50 |
 
+**Example model:**
+
+```julia
+# three-way crossed vector random effects (the benchmark model)
+fit(MixedModel, @formula(y ~ 1 + u + (1 + u | g) + (1 + u | h) + (1 + u | i)), dataset(:d3))
+```
+
 **APA citation:**
 
 No published citation.
@@ -118,6 +154,13 @@ This classic one-way balanced random-effects dataset (30 observations) was the p
 | `batch` | String | Batch identity | A, B, C, D, E, F |
 | `yield` | Int16 | Yield (grams of standard color) | min 1440, mean 1527.5, max 1635 |
 
+**Example model:**
+
+```julia
+# one-way random effects: the classic scalar random-intercept model
+fit(MixedModel, @formula(yield ~ 1 + (1 | batch)), dataset(:dyestuff))
+```
+
 **APA citation:**
 
 Davies, O. L., & Goldsmith, P. L. (Eds.). (1972). *Statistical methods in research and production* (4th ed., Section 6.4). Oliver and Boyd.
@@ -137,6 +180,13 @@ The data were constructed because such cases, while occurring in practice, were 
 |:-----|:-----|:------------|:--------|
 | `batch` | String | Batch identity | A, B, C, D, E, F |
 | `yield` | Float64 | Yield (constructed) | min −0.89, mean 5.67, max 13.43 |
+
+**Example model:**
+
+```julia
+# same model as dyestuff; here the batch variance is estimated at zero (singular fit)
+fit(MixedModel, @formula(yield ~ 1 + (1 | batch)), dataset(:dyestuff2))
+```
 
 **APA citation:**
 
@@ -165,6 +215,11 @@ Covariates include word length and measures of orthographic neighborhood/bigram 
 | `BG_Sum` | Union{Missing, Int32} | Summed bigram frequency (177 missing) | min 11, mean 13938.41, max 59803 |
 | `BG_Mean` | Union{Missing, Float32} | Mean bigram frequency (177 missing) | min 5.5, mean 1921.26, max 6910.0 |
 | `BG_Freq_By_Pos` | Union{Missing, Int16} | Positional bigram frequency (4 missing) | min 0, mean 2043.08, max 6985 |
+
+**Example model:**
+
+This is a covariate table rather than a modelling table: join it to the trial-level
+responses on `item` and fit the model there — see the `elp_ldt_trial` example below.
 
 **APA citation:**
 
@@ -207,6 +262,11 @@ Includes demographic and testing-session information (university site, sex, date
 | `MEQstrt` | Union{Missing, DateTime} | MEQ administration start time (7 missing) | 2001-03-22 to 2003-07-30 |
 | `filename` | String | Source raw-data filename | 814 levels |
 
+**Example model:**
+
+This is a covariate table rather than a modelling table: join it to the trial-level
+responses on `subj` for subject-level predictors — see the `elp_ldt_trial` example below.
+
 **APA citation:**
 
 Balota, D. A., Yap, M. J., Hutchison, K. A., Cortese, M. J., Kessler, B., Loftis, B., Neely, J. H., Nelson, D. L., Simpson, G. B., & Treiman, R. (2007). The English Lexicon Project. *Behavior Research Methods*, *39*(3), 445–459. https://doi.org/10.3758/bf03193014
@@ -233,6 +293,21 @@ Contains 2,745,952 trials with accuracy and raw response time; response times in
 | `acc` | Union{Missing, Bool} | Response accuracy (1370 missing) | false, true |
 | `rt` | Int16 | Response time (ms) | min −16160, mean 846.32, max 32061 |
 
+**Example models:**
+
+```julia
+# join trial responses to the item-level covariates
+trials = leftjoin(DataFrame(dataset(:elp_ldt_trial)), DataFrame(dataset(:elp_ldt_item)); on=:item)
+# lexical-decision accuracy: Bernoulli GLMM
+fit(MixedModel, @formula(acc ~ 1 + isword * wrdlen + (1 | item) + (1 | subj)),
+    trials, Bernoulli(); contrasts=Dict(:isword => EffectsCoding()))
+# response speed (1000/rt) as a linear mixed model
+# (restrict rt to a plausible range, e.g. 200–3000 ms, before fitting)
+fit(MixedModel, @formula(1000 / rt ~ 1 + isword * wrdlen + (1 | item) + (1 | subj)),
+    filter(:rt => r -> 200 <= r <= 3000, trials);
+    contrasts=Dict(:isword => EffectsCoding()))
+```
+
 **APA citation:**
 
 Balota, D. A., Yap, M. J., Hutchison, K. A., Cortese, M. J., Kessler, B., Loftis, B., Neely, J. H., Nelson, D. L., Simpson, G. B., & Treiman, R. (2007). The English Lexicon Project. *Behavior Research Methods*, *39*(3), 445–459. https://doi.org/10.3758/bf03193014
@@ -256,6 +331,16 @@ An introductory example for random-intercept-and-slope models of individual grow
 | `Subj` | String | Boy identity | 20 levels |
 | `time` | Float64 | Age (years) | min 8.0, mean 8.75, max 9.5 |
 | `resp` | Float64 | Ramus bone length (mm) | min 45.0, mean 50.09, max 55.5 |
+
+**Example models:**
+
+```julia
+# random intercept and slope in time
+fit(MixedModel, @formula(resp ~ 1 + time + (1 + time | Subj)), dataset(:elstongrizzle))
+# quadratic individual growth curves
+fit(MixedModel, @formula(resp ~ 1 + time + abs2(time) + (1 + time + abs2(time) | Subj)),
+    dataset(:elstongrizzle))
+```
 
 **APA citation:**
 
@@ -283,6 +368,23 @@ The size and nested structure (children within schools within cohorts) make it a
 | `Test` | String | Fitness component | BPT, Run, S20_r, SLJ, Star_r |
 | `score` | Float64 | Test score (units vary by `Test`) | min 1.14, mean 226.14, max 1530.0 |
 
+**Example models:**
+
+Because `score` units differ across the five components, the analyses in Fühner et al.
+and in the SMLP course materials model the score *z*-standardized within `Test`, against
+a centered age:
+
+```julia
+using StatsBase: zscore
+df = transform(groupby(DataFrame(dataset(:fggk21)), :Test), :score => zscore => :zScore)
+df.a1 = df.age .- 8.5   # age centered near the sampled range
+# fitness component (Test) by age and sex, with by-child and by-school random effects
+fit(MixedModel, @formula(zScore ~ 1 + Test * Sex * a1 + (1 + Test | Child) + (1 + Test | School)),
+    df; contrasts=Dict(:Test => SeqDiffCoding(), :Sex => EffectsCoding()))
+# a common reduction drops the correlation parameters:
+# ... + zerocorr(1 + Test | Child) + zerocorr(1 + Test + a1 | School)
+```
+
 **APA citation:**
 
 Fühner, T., Granacher, U., Golle, K., & Kliegl, R. (2021). Age and sex effects in physical fitness components of 108,295 third graders including 515 primary schools and 9 cohorts. *Scientific Reports*, *11*, Article 17566. https://doi.org/10.1038/s41598-021-97000-4
@@ -307,6 +409,16 @@ A worked example for overdispersed count (Poisson GLMM) analysis with nested gro
 | `height` | Int16 | Altitude (m above sea level) | min 403, mean 462, max 533 |
 | `year` | String | Survey year | 1995, 1996, 1997 |
 | `ticks` | Int8 | Tick count on chick | min 0, mean 6.37, max 85 |
+
+**Example model:**
+
+```julia
+# Poisson GLMM with nested (chick within brood within location) random intercepts
+grouseticks = DataFrame(dataset(:grouseticks))
+grouseticks.ch = grouseticks.height .- mean(grouseticks.height)   # centered altitude
+fit(MixedModel, @formula(ticks ~ 1 + year + ch + (1 | index) + (1 | brood) + (1 | location)),
+    grouseticks, Poisson())
+```
 
 **APA citation:**
 
@@ -335,6 +447,15 @@ A medium-large example of a partially nested (students partially crossed with in
 | `lectage` | String | Lecture recency (semesters ago) | 1, 2, 3, 4, 5, 6 |
 | `service` | String | Service course for another dept | N, Y |
 | `y` | Int8 | Rating | min 1, mean 3.21, max 5 |
+
+**Example models:**
+
+```julia
+# students (s) partially crossed with instructors (d), plus a department effect
+fit(MixedModel, @formula(y ~ 1 + (1 | s) + (1 | d) + (1 | dept)), dataset(:insteval))
+# add the service-course fixed effect
+fit(MixedModel, @formula(y ~ 1 + service + (1 | s) + (1 | d) + (1 | dept)), dataset(:insteval))
+```
 
 **APA citation:**
 
@@ -366,6 +487,23 @@ The dataset contains 1,789 observations of truncated reaction times (rt_trunc) a
 | `rt_trunc` | Int16 | Truncated reaction time (ms) | min 579, mean 2182, max 5171 |
 | `rt_raw` | Int16 | Raw reaction time (ms) | min 579, mean 2226, max 15923 |
 
+**Example models:**
+
+```julia
+contrasts = Dict(:spkr => HelmertCoding(), :prec => HelmertCoding(), :load => HelmertCoding())
+# crossed random intercepts, additive fixed effects
+fit(MixedModel, @formula(rt_trunc ~ 1 + spkr + prec + load + (1 | subj) + (1 | item)),
+    dataset(:kb07); contrasts)
+# main-effects random slopes (a common parsimonious reduction)
+fit(MixedModel, @formula(rt_trunc ~ 1 + spkr * prec * load +
+        (1 + spkr + prec + load | subj) + (1 + spkr + prec + load | item)),
+    dataset(:kb07); contrasts)
+# maximal: full interaction in both fixed and random effects
+fit(MixedModel, @formula(rt_trunc ~ 1 + spkr * prec * load +
+        (1 + spkr * prec * load | subj) + (1 + spkr * prec * load | item)),
+    dataset(:kb07); contrasts)
+```
+
 **APA citation:**
 
 Kronmüller, E., & Barr, D. J. (2007). Perspective-free pragmatics: Broken precedents and the recovery-from-preemption hypothesis. *Journal of Memory and Language*, *56*(3), 436–455. https://doi.org/10.1016/j.jml.2006.05.002
@@ -393,6 +531,18 @@ Adding diagonal orientations and a target-size manipulation to the original desi
 | `cardinal` | String | Rectangle orientation | cardinal, diagonal |
 | `size` | String | Target size | big, small |
 | `rt` | Float32 | Reaction time (ms) | min 150.22, mean 293.15, max 749.48 |
+
+**Example models:**
+
+```julia
+contrasts = Dict(:CTR => SeqDiffCoding(), :cardinal => EffectsCoding(), :size => EffectsCoding())
+# full factorial fixed effects with correlated random slopes
+fit(MixedModel, @formula(rt ~ 1 + CTR * cardinal * size + (1 + CTR * cardinal | Subj)),
+    dataset(:kkl15); contrasts)
+# parsimonious reduction with uncorrelated random effects
+fit(MixedModel, @formula(rt ~ 1 + CTR * cardinal * size + zerocorr(1 + CTR + cardinal | Subj)),
+    dataset(:kkl15); contrasts)
+```
 
 **APA citation:**
 
@@ -422,6 +572,20 @@ The attraction effect proved close to zero as a fixed effect but showed a reliab
 | `dir` | String | Rectangle orientation | hor, ver |
 | `rt` | Float32 | Reaction time (ms) | min 150.1, mean 370.43, max 705.7 |
 
+**Example models:**
+
+This dataset is the standard contrast-coding showcase: the same model is refit under
+different codings of the four-level factor `CTR`.
+
+```julia
+# Helmert-coded cue-target relation, correlated random slopes for CTR
+fit(MixedModel, @formula(rt ~ 1 + CTR + (1 + CTR | Subj)),
+    dataset(:kwdyz11); contrasts=Dict(:CTR => HelmertCoding()))
+# the same model on the log scale
+fit(MixedModel, @formula(log(rt) ~ 1 + CTR + (1 + CTR | Subj)),
+    dataset(:kwdyz11); contrasts=Dict(:CTR => HelmertCoding()))
+```
+
 **APA citation:**
 
 Kliegl, R., Wei, P., Dambacher, M., Yan, M., & Zhou, X. (2011). Experimental effects and individual differences in linear mixed models: Estimating the relationship between spatial, object, and attraction effects of visual attention. *Frontiers in Psychology*, *1*, Article 238. https://doi.org/10.3389/fpsyg.2010.00238
@@ -447,6 +611,14 @@ A classic example from the split-plot/repeated-measures literature, analyzed wit
 | `Machine` | String | Machine brand | A, B, C |
 | `score` | Float32 | Productivity score | min 43.0, mean 59.65, max 72.1 |
 
+**Example model:**
+
+```julia
+# machine fixed effect with a random worker intercept and worker-by-machine interaction
+fit(MixedModel, @formula(score ~ 1 + Machine + (1 | Worker) + (1 | Worker & Machine)),
+    dataset(:machines))
+```
+
 **APA citation:**
 
 Milliken, G. A., & Johnson, D. E. (1992). *Analysis of messy data: Vol. I. Designed experiments* (p. 285). Chapman and Hall.
@@ -468,9 +640,16 @@ Included in MixedModels.jl as a large-scale benchmark for two-way crossed random
 
 | Name | Type | Description | Summary |
 |:-----|:-----|:------------|:--------|
-| `g` | String | User identity | 6040 levels |
-| `h` | String | Movie identity | 3706 levels |
-| `y` | Int8 | Rating (1–5 stars) | min 1, mean 3.58, max 5 |
+| `G` | String | User identity | 6040 levels |
+| `H` | String | Movie identity | 3706 levels |
+| `Y` | Int8 | Rating (1–5 stars) | min 1, mean 3.58, max 5 |
+
+**Example model:**
+
+```julia
+# two-way crossed random effects: users (G) crossed with movies (H)
+fit(MixedModel, @formula(Y ~ 1 + (1 | G) + (1 | H)), dataset(:ml1m))
+```
 
 **APA citation:**
 
@@ -493,6 +672,11 @@ Collected and distributed by the GroupLens Research Group at the University of M
 | `movieId` | Int64 | Movie identity | min 1, mean 157651.37, max 292757 |
 | `title` | String | Movie title (with release year) | 87382 levels |
 | `genres` | String | Pipe-separated genre tags | 20 distinct tags |
+
+**Example model:**
+
+This is a metadata table: join it to `ml32_ratings` on `movieId` to add title/genre
+predictors — see the `ml32_ratings` example below.
 
 **APA citation:**
 
@@ -520,6 +704,13 @@ A much larger successor to `ml1m`, useful as a benchmark for two-way crossed ran
 | `rating` | Float64 | Rating (0.5–5.0 stars, half-star increments) | min 0.5, mean 3.54, max 5.0 |
 | `timestamp` | Int64 | Rating time (Unix epoch seconds) | 1995-01-09 to 2023-10-13 |
 
+**Example model:**
+
+```julia
+# two-way crossed random effects at scale: users crossed with movies
+fit(MixedModel, @formula(rating ~ 1 + (1 | userId) + (1 | movieId)), dataset(:ml32_ratings))
+```
+
 **APA citation:**
 
 Harper, F. M., & Konstan, J. A. (2016). The MovieLens datasets: History and context. *ACM Transactions on Interactive Intelligent Systems*, *5*(4), Article 19. https://doi.org/10.1145/2827872
@@ -546,6 +737,15 @@ A standard example for Poisson GLMMs with region-level random intercepts and a n
 | `deaths` | Int16 | Observed melanoma deaths | min 0, mean 27.83, max 313 |
 | `expected` | Float64 | Expected deaths (age/sex adjusted) | min 0.69, mean 27.80, max 258.86 |
 | `uvb` | Float64 | UV radiation index (centered) | min −8.90, mean 0.00, max 13.36 |
+
+**Example model:**
+
+```julia
+# Poisson GLMM with a region random intercept and a population offset
+mmec = dataset(:mmec)
+fit(MixedModel, @formula(deaths ~ 1 + uvb + (1 | region)),
+    mmec, Poisson(); offset=log.(mmec.expected))
+```
 
 **APA citation:**
 
@@ -577,6 +777,21 @@ A standard RePsychLing benchmark for high-dimensional crossed random-effects mod
 | `lT` | String | Lagged target type | NW, WD |
 | `rt` | Int16 | Response time (ms) | min 301, mean 647, max 2994 |
 
+**Example models:**
+
+```julia
+contrasts = Dict(:F => EffectsCoding(), :P => EffectsCoding(), :Q => EffectsCoding(),
+                 :lQ => EffectsCoding(), :lT => EffectsCoding())
+# maximal model on the speed scale (1000/rt)
+fit(MixedModel, @formula(1000 / rt ~ 1 + F * P * Q * lQ * lT +
+        (1 + F + P + Q + lQ + lT | subj) + (1 + P + Q + lQ + lT | item)),
+    dataset(:mrk17_exp1); contrasts)
+# zero-correlation-parameter reduction
+fit(MixedModel, @formula(1000 / rt ~ 1 + F * P * Q * lQ * lT +
+        zerocorr(1 + F + P + Q + lQ + lT | subj) + zerocorr(1 + P + Q + lQ + lT | item)),
+    dataset(:mrk17_exp1); contrasts)
+```
+
 **APA citation:**
 
 Masson, M. E. J., Rabe, M. M., & Kliegl, R. (2017). Modulation of additive and interactive effects in lexical decision by trial history. *Memory & Cognition*, *45*(3), 480–492. https://doi.org/10.3758/s13421-016-0666-z
@@ -601,6 +816,13 @@ A classic example, popularized by Pinheiro & Bates (2000), for fitting random-in
 | `occasion` | Int8 | Measurement occasion | 1–9 |
 | `age` | Float64 | Standardized age | min −1.0, mean 0.02, max 1.0055 |
 | `height` | Float64 | Height (cm) | min 126.2, mean 149.52, max 174.8 |
+
+**Example model:**
+
+```julia
+# random intercept and slope in (standardized) age
+fit(MixedModel, @formula(height ~ 1 + age + (1 + age | Subj)), dataset(:oxboys))
+```
 
 **APA citation:**
 
@@ -629,6 +851,16 @@ A four-level nested design (sites within wafers within lots within sources).
 | `Site` | String | Measurement site (within wafer) | 1, 2, 3 |
 | `Thickness` | Float64 | Oxide layer thickness | min 1980, mean 2000, max 2036 |
 
+**Example models:**
+
+```julia
+# variance components: wafers nested within lots
+fit(MixedModel, @formula(Thickness ~ 1 + (1 | Lot / Wafer)), dataset(:oxide))
+# add a source fixed effect and source-varying random effects
+fit(MixedModel, @formula(Thickness ~ 1 + Source + (1 + Source | Lot) + (1 + Source | Lot & Wafer)),
+    dataset(:oxide))
+```
+
 **APA citation:**
 
 Littell, R. C., Milliken, G. A., Stroup, W. W., & Wolfinger, R. D. (1996). *SAS system for mixed models* (p. 155). SAS Institute.
@@ -652,6 +884,15 @@ Littell, R. C., Milliken, G. A., Stroup, W. W., & Wolfinger, R. D. (1996). *SAS 
 | `cask` | String | Cask identity (within batch) | a, b, c |
 | `strength` | Float64 | Paste strength | min 54.2, mean 60.05, max 66.0 |
 
+**Example models:**
+
+```julia
+# batch-only random intercept
+fit(MixedModel, @formula(strength ~ 1 + (1 | batch)), dataset(:pastes))
+# cask nested within batch
+fit(MixedModel, @formula(strength ~ 1 + (1 | batch / cask)), dataset(:pastes))
+```
+
 **APA citation:**
 
 Davies, O. L., & Goldsmith, P. L. (Eds.). (1972). *Statistical methods in research and production* (4th ed., Section 6.5). Oliver and Boyd.
@@ -673,6 +914,13 @@ A classic example for fitting models with crossed random effects, originating fr
 | `plate` | String | Plate identity | 24 levels |
 | `sample` | String | Penicillin sample | A, B, C, D, E, F |
 | `diameter` | Int8 | Zone of inhibition diameter (mm) | min 18, mean 22.97, max 27 |
+
+**Example model:**
+
+```julia
+# fully crossed random effects for plate and sample
+fit(MixedModel, @formula(diameter ~ 1 + (1 | plate) + (1 | sample)), dataset(:penicillin))
+```
 
 **APA citation:**
 
@@ -698,6 +946,17 @@ A ubiquitous example for fitting linear mixed models with random slopes for time
 
 !!! note "Prior erroneous description"
     The lme4 help page contains a slight inaccuracy: sleep restriction began after day 2 (the baseline), not day 0 (see Belenky et al., 2003, p. 2, and [lme4 GitHub issue #615](https://github.com/lme4/lme4/issues/615)).
+
+**Example models:**
+
+```julia
+# random intercept only
+fit(MixedModel, @formula(reaction ~ 1 + days + (1 | subj)), dataset(:sleepstudy))
+# uncorrelated random intercept and slope
+fit(MixedModel, @formula(reaction ~ 1 + days + zerocorr(1 + days | subj)), dataset(:sleepstudy))
+# maximal: correlated random intercept and slope for days
+fit(MixedModel, @formula(reaction ~ 1 + days + (1 + days | subj)), dataset(:sleepstudy))
+```
 
 **APA citation:**
 
@@ -727,6 +986,14 @@ Originally collected by Vansteelandt (2000) and used throughout De Boeck & Wilso
 | `mode` | String | Response mode | do, want |
 | `resp` | String | Polytomous response | no, perhaps, yes |
 | `r2` | String | Binary response | N, Y |
+
+**Example model:**
+
+```julia
+# Bernoulli GLMM for the dichotomized response, crossed subject and item effects
+fit(MixedModel, @formula(r2 ~ 1 + anger + gender + btype + situ + mode + (1 | subj) + (1 | item)),
+    dataset(:verbagg), Bernoulli())
+```
 
 **APA citation:**
 
