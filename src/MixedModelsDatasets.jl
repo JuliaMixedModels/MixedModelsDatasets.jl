@@ -3,15 +3,17 @@ module MixedModelsDatasets
 using Arrow
 using DelimitedFiles
 using Downloads
+using Markdown
 using ProgressMeter
 using Scratch
 using SHA
 
-export dataset, datasets
+export dataset, datasets, description
 
 const CACHE = Ref("")
 const CACHED_DATASETS = Dict{String,String}()
 const DATASETS = Dict{String,NamedTuple}()
+const DESCRIPTIONS = Dict{String,String}()
 
 """
     __init__()
@@ -31,7 +33,44 @@ function __init__()
         DATASETS[row.dsname] = row
     end
 
+    _parse_descriptions!(DESCRIPTIONS, joinpath(dirname(@__DIR__), "docs", "src", "datasets.md"))
+
     return nothing
+end
+
+"""
+    _parse_descriptions!(dict, path)
+
+Populate `dict` with the per-dataset sections of the Markdown documentation
+file at `path`, keyed by (lowercased) dataset name. Each `## name` heading
+begins a new section, which runs until the next heading or end of file, with
+the trailing horizontal-rule separator (`---`) removed.
+"""
+function _parse_descriptions!(dict, path)
+    isfile(path) || return dict
+    name = ""
+    lines = String[]
+    flush! = function ()
+        if !isempty(name)
+            while !isempty(lines) && (isempty(strip(last(lines))) || strip(last(lines)) == "---")
+                pop!(lines)
+            end
+            dict[name] = join(lines, '\n')
+        end
+        return nothing
+    end
+    for line in eachline(path)
+        m = match(r"^##[ \t]+(\S.*?)[ \t]*$", line)
+        if m !== nothing
+            flush!()
+            name = lowercase(m.captures[1])
+            lines = String[line]
+        elseif !isempty(name)
+            push!(lines, line)
+        end
+    end
+    flush!()
+    return dict
 end
 
 """
@@ -55,6 +94,25 @@ function dataset(nm::AbstractString)
     return Arrow.Table(path)
 end
 dataset(nm::Symbol) = dataset(string(nm))
+
+"""
+    description(nm)
+
+Return the documentation entry for the dataset named `nm` (a `String` or
+`Symbol`) as a `Markdown.MD` object, which renders nicely in the REPL. The
+entry — full name, description, column table, example models, and citation —
+is parsed from the package's `datasets.md` documentation.
+
+!!! note "Case insensitive"
+    Dataset names are case insensitive: internally all names are normalized to lowercase.
+"""
+function description(nm::AbstractString)
+    key = lowercase(nm)
+    haskey(DESCRIPTIONS, key) ||
+        throw(ArgumentError("No description available for dataset \"$nm\".\nUse MixedModelsDatasets.datasets() for available names."))
+    return Markdown.parse(DESCRIPTIONS[key])
+end
+description(nm::Symbol) = description(string(nm))
 
 """
     datasets()
