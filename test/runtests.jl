@@ -1,5 +1,6 @@
 using Arrow
 using Aqua
+using Markdown
 using MixedModelsDatasets
 using Test
 
@@ -16,4 +17,13 @@ end
     end
 
     @test_throws ArgumentError dataset("This is not a Dataset")
+end
+
+@testset "description" begin
+    @testset "$(ds) described" for ds in datasets()
+        @test description(ds) isa Markdown.MD
+        @test description(Symbol(titlecase(ds))) isa Markdown.MD
+    end
+
+    @test_throws ArgumentError description("This is not a Dataset")
 end

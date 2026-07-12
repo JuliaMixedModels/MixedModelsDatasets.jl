@@ -15,5 +15,5 @@ DocTestFilters = [r"([a-z]*) => \1", r"getfield\(.*##[0-9]+#[0-9]+"]
 
 ```@autodocs
 Modules = [MixedModelsDatasets]
-Private = true
+Private = false
 ```
