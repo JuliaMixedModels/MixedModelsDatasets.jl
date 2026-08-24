@@ -1,10 +1,24 @@
+# `Downloads` has no built-in retry, so wrap it in `Base.retry`. A single delay
+# means two attempts total: the original try, plus one retry 10 seconds later.
+const _RETRY_DELAY_SECONDS = 10.0
+
+function _retry_check(state, e)
+    retry_ok = e isa Downloads.RequestError
+    retry_ok &&
+        @warn "Dataset download failed; retrying in $(_RETRY_DELAY_SECONDS) seconds" exception = e
+    return (state, retry_ok)
+end
+
+const _download_with_retry = Base.retry(Downloads.download; delays=[_RETRY_DELAY_SECONDS],
+                                        check=_retry_check)
+
 """
     _download(nm::AbstractString; info=true)
 
 Return the local cache path for dataset `nm`, downloading it (and verifying
 its SHA-256 checksum) if it is not already cached or the cached file's
-checksum no longer matches. Set `info=false` to suppress the `@info` log
-messages.
+checksum no longer matches. A download that fails with a network error is
+retried once. Set `info=false` to suppress the `@info` log messages.
 """
 function _download(nm::AbstractString; info=true)
     nm = lowercase(nm)
@@ -16,7 +30,7 @@ function _download(nm::AbstractString; info=true)
         if !isfile(path) || ds.sha2 != bytes2hex(open(sha2_256, path))
             info && @info "Downloading dataset..."
             url = string("https://osf.io/", ds.filename, "/download?version=", ds.version)
-            Downloads.download(url, path)
+            _download_with_retry(url, path)
             ds.sha2 == bytes2hex(open(sha2_256, path)) ||
                 error("Downloaded file failed checksum verification.")
             info && @info "done"
