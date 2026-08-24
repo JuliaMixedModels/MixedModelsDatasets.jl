@@ -1,15 +1,18 @@
-# `Downloads` has no built-in retry, so wrap it in `Base.retry`. A single delay
-# means two attempts total: the original try, plus one retry 10 seconds later.
-const _RETRY_DELAY_SECONDS = 10.0
+"""
+    _RETRY_DELAY_SECONDS
+
+Retry intervals for a failed download.
+"""
+const _RETRY_DELAY_SECONDS = Float64[1, 2, 5, 10]
 
 function _retry_check(state, e)
-    retry_ok = e isa Downloads.RequestError
-    retry_ok &&
-        @warn "Dataset download failed; retrying in $(_RETRY_DELAY_SECONDS) seconds" exception = e
-    return (state, retry_ok)
+    retry = e isa Downloads.RequestError
+    retry &&
+        @warn "Dataset download failed; retrying in $(_RETRY_DELAY_SECONDS[state - 1]) seconds" exception = e
+    return (state, retry)
 end
 
-const _download_with_retry = Base.retry(Downloads.download; delays=[_RETRY_DELAY_SECONDS],
+const _download_with_retry = Base.retry(Downloads.download; delays=_RETRY_DELAY_SECONDS,
                                         check=_retry_check)
 
 """
