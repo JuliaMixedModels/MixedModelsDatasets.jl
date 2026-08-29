@@ -25,17 +25,28 @@ retried once. Set `info=false` to suppress the `@info` log messages.
 """
 function _download(nm::AbstractString; info=true)
     nm = lowercase(nm)
+    @debug "" CACHED_DATASETS
     return get!(CACHED_DATASETS, nm) do
         nm in keys(DATASETS) ||
             throw(ArgumentError("Dataset \"$nm\" is not available.\nUse MixedModels.datasets() for available names."))
         path = joinpath(CACHE[], nm * ".arrow")
         ds = DATASETS[nm]
-        if !isfile(path) || ds.sha2 != bytes2hex(open(sha2_256, path))
+        @debug "Expected: $(ds.sha2)"
+        if isfile(path) 
+            checksum = bytes2hex(open(sha2_256, path))
+            @debug "Cached  : $(checksum)"
+        else
+            checksum = ""
+        end
+        if ds.sha2 != checksum
             info && @info "Downloading dataset..."
             url = string("https://osf.io/", ds.filename, "/download?version=", ds.version)
             _download_with_retry(url, path)
-            ds.sha2 == bytes2hex(open(sha2_256, path)) ||
+            checksum = bytes2hex(open(sha2_256, path))
+            if ds.sha2 != checksum
+                @debug "Received: $(checksum)" 
                 error("Downloaded file failed checksum verification.")
+            end
             info && @info "done"
         end
 

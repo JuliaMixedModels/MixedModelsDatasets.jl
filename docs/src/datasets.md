@@ -367,6 +367,7 @@ The size and nested structure (children within schools within cohorts) make it a
 | `age` | Float64 | Age at testing (years) | min 7.99, mean 8.56, max 9.11 |
 | `Test` | String | Fitness component | BPT, Run, S20_r, SLJ, Star_r |
 | `score` | Float64 | Test score (units vary by `Test`) | min 1.14, mean 226.14, max 1530.0 |
+| `zScore` | Float64 | Test score (units vary by `Test`) | min -3.15, mean 0, max 3.55 |
 
 **Example models:**
 
@@ -375,12 +376,14 @@ and in the SMLP course materials model the score *z*-standardized within `Test`,
 a centered age:
 
 ```julia
-using StatsBase: zscore
-df = transform(groupby(DataFrame(dataset(:fggk21)), :Test), :score => zscore => :zScore)
-df.a1 = df.age .- 8.5   # age centered near the sampled range
+using StandardizedPredictors
 # fitness component (Test) by age and sex, with by-child and by-school random effects
-fit(MixedModel, @formula(zScore ~ 1 + Test * Sex * a1 + (1 + Test | Child) + (1 + Test | School)),
-    df; contrasts=Dict(:Test => SeqDiffCoding(), :Sex => EffectsCoding()))
+fit(MixedModel, 
+    @formula(zScore ~ 1 + Test * Sex * age + (1 + Test | Child) + (1 + Test | School)),
+    df; 
+    contrasts=Dict(:Test => SeqDiffCoding(), 
+                   :Sex => EffectsCoding()),
+                   :age => Center(8.5))
 # a common reduction drops the correlation parameters:
 # ... + zerocorr(1 + Test | Child) + zerocorr(1 + Test + a1 | School)
 ```
