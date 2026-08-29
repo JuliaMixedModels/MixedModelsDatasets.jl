@@ -367,7 +367,7 @@ The size and nested structure (children within schools within cohorts) make it a
 | `age` | Float64 | Age at testing (years) | min 7.99, mean 8.56, max 9.11 |
 | `Test` | String | Fitness component | BPT, Run, S20_r, SLJ, Star_r |
 | `score` | Float64 | Test score (units vary by `Test`) | min 1.14, mean 226.14, max 1530.0 |
-| `zScore` | Float64 | Test score (units vary by `Test`) | min -3.15, mean 0, max 3.55 |
+| `zScore` | Float64 | Test score, z-scored within each test | min -3.15, mean 0, max 3.55 |
 
 **Example models:**
 
