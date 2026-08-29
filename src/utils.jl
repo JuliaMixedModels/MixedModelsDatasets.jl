@@ -32,7 +32,7 @@ function _download(nm::AbstractString; info=true)
         path = joinpath(CACHE[], nm * ".arrow")
         ds = DATASETS[nm]
         @debug "Expected: $(ds.sha2)"
-        if isfile(path) 
+        if isfile(path)
             checksum = bytes2hex(open(sha2_256, path))
             @debug "Cached  : $(checksum)"
         else
@@ -44,7 +44,7 @@ function _download(nm::AbstractString; info=true)
             _download_with_retry(url, path)
             checksum = bytes2hex(open(sha2_256, path))
             if ds.sha2 != checksum
-                @debug "Received: $(checksum)" 
+                @debug "Received: $(checksum)"
                 error("Downloaded file failed checksum verification.")
             end
             info && @info "done"
